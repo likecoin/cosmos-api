@@ -29,15 +29,16 @@ export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PR
   // sign transaction
   const stdTx = createStdTx({ gas, gasPrices, memo }, messages)
   const signMessage = createSignMessage(stdTx, { sequence, accountNumber, chainId })
-  let signature, publicKey
+  let signature, publicKey, signed
   try {
-    ({ signature, publicKey } = await signer(signMessage))
+    ({ signature, publicKey, signed } = await signer(signMessage))
   } catch (err) {
     throw new Error('Signing failed: ' + err.message)
   }
 
+  const tx = signed || stdTx
   const signatureObject = createSignature(signature, sequence, accountNumber, publicKey)
-  const signedTx = createSignedTransactionObject(stdTx, signatureObject)
+  const signedTx = createSignedTransactionObject(tx, signatureObject)
 
   return signedTx
 }
