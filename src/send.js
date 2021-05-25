@@ -2,19 +2,20 @@
 
 import { createSignMessage, createSignature } from './signature'
 
-const DEFAULT_GAS_PRICE = [{ amount: (2.5e-8).toFixed(9), denom: `uatom` }]
+const DEFAULT_GAS_PRICE = [{ amount: (2.5e-8).toFixed(9), denom: 'uatom' }]
 
-export default async function send ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo = `` }, messages, signer, cosmosRESTURL, chainId, accountNumber, sequence) {
+export default async function send ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo = '' }, messages, signer, cosmosRESTURL, chainId, accountNumber, sequence) {
   const signedTx = await createSignedTransaction({ gas, gasPrices, memo }, messages, signer, chainId, accountNumber, sequence)
 
   // broadcast transaction with signatures included
-  const body = createBroadcastBody(signedTx, `sync`)
+  const body = createBroadcastBody(signedTx, 'sync')
   const res = await fetch(`${cosmosRESTURL}/txs`, {
-    method: `POST`,
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body })
+    body
+  })
     .then(res => res.json())
     .then(assertOk)
 
@@ -25,7 +26,7 @@ export default async function send ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo =
   }
 }
 
-export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo = `` }, messages, signer, chainId, accountNumber, sequence) {
+export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo = '' }, messages, signer, chainId, accountNumber, sequence) {
   // sign transaction
   let stdTx = createStdTx({ gas, gasPrices, memo }, messages)
   const signMessage = createSignMessage(stdTx, { sequence, accountNumber, chainId })
@@ -73,7 +74,7 @@ export async function queryTxInclusion (txHash, cosmosRESTURL, iterations = 60, 
     }
   }
   if (iterations <= 0) {
-    throw new Error(`The transaction was still not included in a block. We can't say for certain it will be included in the future.`)
+    throw new Error('The transaction was still not included in a block. We can\'t say for certain it will be included in the future.')
   }
 
   assertOk(includedTx)
@@ -98,7 +99,7 @@ export function createStdTx ({ fees: inputFees, gas, gasPrices, memo }, messages
 
 // the broadcast body consists of the signed tx and a return type
 // returnType can be block (inclusion in block), async (right away), sync (after checkTx has passed)
-function createBroadcastBody (signedTx, returnType = `sync`) {
+function createBroadcastBody (signedTx, returnType = 'sync') {
   return JSON.stringify({
     tx: signedTx,
     mode: returnType
@@ -115,7 +116,7 @@ function createSignedTransactionObject (tx, signature) {
 // assert that a transaction was sent successful
 function assertOk (res) {
   if (Array.isArray(res)) {
-    if (res.length === 0) throw new Error(`Error sending transaction`)
+    if (res.length === 0) throw new Error('Error sending transaction')
 
     res.forEach(assertOk)
   }

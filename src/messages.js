@@ -7,7 +7,7 @@ export function MsgSend (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgSend`,
+    type: 'cosmos-sdk/MsgSend',
     value: {
       from_address: senderAddress,
       to_address: toAddress,
@@ -26,7 +26,7 @@ export function MsgDelegate (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgDelegate`,
+    type: 'cosmos-sdk/MsgDelegate',
     value: {
       delegator_address: senderAddress,
       validator_address: validatorAddress,
@@ -44,7 +44,7 @@ export function MsgUndelegate (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgUndelegate`,
+    type: 'cosmos-sdk/MsgUndelegate',
     value: {
       validator_address: validatorAddress,
       delegator_address: senderAddress,
@@ -63,7 +63,7 @@ export function MsgRedelegate (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgBeginRedelegate`,
+    type: 'cosmos-sdk/MsgBeginRedelegate',
     value: {
       delegator_address: senderAddress,
       validator_src_address: validatorSourceAddress,
@@ -85,7 +85,7 @@ export function MsgSubmitProposal (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgSubmitProposal`,
+    type: 'cosmos-sdk/MsgSubmitProposal',
     value: {
       content: {
         type: 'cosmos-sdk/TextProposal',
@@ -108,7 +108,7 @@ export function MsgVote (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgVote`,
+    type: 'cosmos-sdk/MsgVote',
     value: {
       voter: senderAddress,
       proposal_id: proposalId,
@@ -125,7 +125,7 @@ export function MsgDeposit (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgDeposit`,
+    type: 'cosmos-sdk/MsgDeposit',
     value: {
       depositor: senderAddress,
       proposal_id: proposalId,
@@ -141,7 +141,7 @@ export function MsgWithdrawDelegationReward (
   }
 ) {
   return {
-    type: `cosmos-sdk/MsgWithdrawDelegationReward`,
+    type: 'cosmos-sdk/MsgWithdrawDelegationReward',
     value: {
       delegator_address: senderAddress,
       validator_address: validatorAddress
@@ -157,12 +157,12 @@ function Coin ({ amount, denom }) {
 }
 
 export default {
-  'MsgSend': MsgSend,
-  'MsgDelegate': MsgDelegate,
-  'MsgUndelegate': MsgUndelegate,
-  'MsgRedelegate': MsgRedelegate,
-  'MsgSubmitProposal': MsgSubmitProposal,
-  'MsgVote': MsgVote,
-  'MsgDeposit': MsgDeposit,
-  'MsgWithdrawDelegationReward': MsgWithdrawDelegationReward
+  MsgSend: MsgSend,
+  MsgDelegate: MsgDelegate,
+  MsgUndelegate: MsgUndelegate,
+  MsgRedelegate: MsgRedelegate,
+  MsgSubmitProposal: MsgSubmitProposal,
+  MsgVote: MsgVote,
+  MsgDeposit: MsgDeposit,
+  MsgWithdrawDelegationReward: MsgWithdrawDelegationReward
 }

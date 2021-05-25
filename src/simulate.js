@@ -17,7 +17,7 @@ export default async function simulate (
     'cosmos-sdk/MsgDelegate': () => `/staking/delegators/${senderAddress}/delegations`,
     'cosmos-sdk/MsgUndelegate': () => `/staking/delegators/${senderAddress}/unbonding_delegations`,
     'cosmos-sdk/MsgBeginRedelegate': () => `/staking/delegators/${senderAddress}/redelegations`,
-    'cosmos-sdk/MsgSubmitProposal': () => `/gov/proposals`,
+    'cosmos-sdk/MsgSubmitProposal': () => '/gov/proposals',
     'cosmos-sdk/MsgVote': () => `/gov/proposals/${msg.value.proposal_id}/votes`,
     'cosmos-sdk/MsgDeposit': () => `/gov/proposals/${msg.value.proposal_id}/deposits`,
     'cosmos-sdk/MsgWithdrawDelegationReward': () => `/distribution/delegators/${senderAddress}/rewards`
@@ -42,7 +42,7 @@ export default async function simulate (
   const tx = createRESTPOSTObject(senderAddress, chainId, { sequence, accountNumber, memo }, msg)
 
   const { gas_estimate: gasEstimate } = await fetch(url, {
-    method: `POST`,
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },

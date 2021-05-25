@@ -45,24 +45,24 @@ export default function Getters (cosmosRESTURL) {
       return this.nodeVersion().then(() => true, () => false)
     },
 
-    nodeVersion: () => fetch(cosmosRESTURL + `/node_version`).then(res => res.text()),
+    nodeVersion: () => fetch(cosmosRESTURL + '/node_version').then(res => res.text()),
 
     // coins
     account: function (address) {
       const emptyAccount = {
         coins: [],
-        sequence: `0`,
-        account_number: `0`
+        sequence: '0',
+        account_number: '0'
       }
       return get(`/auth/accounts/${address}`)
         .then(res => {
           if (!res) return emptyAccount
           let account = res.value || emptyAccount
           // HACK, hope for: https://github.com/cosmos/cosmos-sdk/issues/3885
-          if (res.type === `auth/DelayedVestingAccount`) {
+          if (res.type === 'auth/DelayedVestingAccount') {
             if (!account.BaseVestingAccount) {
               console.error(
-                `SDK format of vesting accounts responses has changed`
+                'SDK format of vesting accounts responses has changed'
               )
               return emptyAccount
             }
@@ -80,8 +80,8 @@ export default function Getters (cosmosRESTURL) {
           // if account not found, return null instead of throwing
           if (
             err.response &&
-            (err.response.data.includes(`account bytes are empty`) ||
-              err.response.data.includes(`failed to prove merkle proof`))
+            (err.response.data.includes('account bytes are empty') ||
+              err.response.data.includes('failed to prove merkle proof'))
           ) {
             return emptyAccount
           }
@@ -151,9 +151,9 @@ export default function Getters (cosmosRESTURL) {
     },
     // Get a list containing all the validator candidates
     validators: () => Promise.all([
-      get(`/staking/validators?status=unbonding`),
-      get(`/staking/validators?status=bonded`),
-      get(`/staking/validators?status=unbonded`)
+      get('/staking/validators?status=unbonding'),
+      get('/staking/validators?status=bonded'),
+      get('/staking/validators?status=unbonded')
     ]).then((validatorGroups) =>
       [].concat(...validatorGroups)
     ),
@@ -163,7 +163,7 @@ export default function Getters (cosmosRESTURL) {
     },
 
     // Get the list of the validators in the latest validator set
-    validatorSet: () => get(`/validatorsets/latest`),
+    validatorSet: () => get('/validatorsets/latest'),
 
     // Query a delegation between a delegator and a validator
     delegation: function (delegatorAddr, validatorAddr) {
@@ -180,8 +180,8 @@ export default function Getters (cosmosRESTURL) {
         true
       )
     },
-    pool: () => get(`/staking/pool`),
-    stakingParameters: () => get(`/staking/parameters`),
+    pool: () => get('/staking/pool'),
+    stakingParameters: () => get('/staking/parameters'),
 
     /* ============ Slashing ============ */
 
@@ -189,12 +189,12 @@ export default function Getters (cosmosRESTURL) {
       return get(`/slashing/validators/${pubKey}/signing_info`)
     },
     validatorSigningInfos: function () {
-      return get(`/slashing/signing_infos`)
+      return get('/slashing/signing_infos')
     },
 
     /* ============ Governance ============ */
 
-    proposals: () => get(`/gov/proposals`),
+    proposals: () => get('/gov/proposals'),
     proposal: function (proposalId) {
       return get(`/gov/proposals/${proposalId}`)
     },
@@ -220,9 +220,9 @@ export default function Getters (cosmosRESTURL) {
     proposalTally: function (proposalId) {
       return get(`/gov/proposals/${proposalId}/tally`)
     },
-    govDepositParameters: () => get(`/gov/parameters/deposit`),
-    govTallyingParameters: () => get(`/gov/parameters/tallying`),
-    govVotingParameters: () => get(`/gov/parameters/voting`),
+    govDepositParameters: () => get('/gov/parameters/deposit'),
+    govTallyingParameters: () => get('/gov/parameters/tallying'),
+    govVotingParameters: () => get('/gov/parameters/voting'),
     governanceTxs: async function (address) {
       return Promise.all([
         get(`/txs?message.action=submit_proposal&message.proposer=${address}`),
@@ -269,20 +269,20 @@ export default function Getters (cosmosRESTURL) {
       return get(`/distribution/validators/${validatorAddr}/rewards`)
     },
     distributionParameters: function () {
-      return get(`/distribution/parameters`)
+      return get('/distribution/parameters')
     },
     distributionOutstandingRewards: function () {
-      return get(`/distribution/outstanding_rewards`)
+      return get('/distribution/outstanding_rewards')
     },
 
     annualProvisionedTokens: function () {
-      return get(`/minting/annual-provisions`)
+      return get('/minting/annual-provisions')
     },
     inflation: function () {
-      return get(`/minting/inflation`)
+      return get('/minting/inflation')
     },
     mintingParameters: function () {
-      return get(`/minting/parameters`)
+      return get('/minting/parameters')
     }
   }
 }

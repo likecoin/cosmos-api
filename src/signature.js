@@ -39,12 +39,12 @@ export function createSignature (
   publicKey
 ) {
   return {
-    signature: signature.toString(`base64`),
+    signature: signature.toString('base64'),
     account_number: accountNumber,
     sequence,
     pub_key: {
-      type: `tendermint/PubKeySecp256k1`, // TODO: allow other keytypes
-      value: publicKey.toString(`base64`)
+      type: 'tendermint/PubKeySecp256k1', // TODO: allow other keytypes
+      value: publicKey.toString('base64')
     }
   }
 }
@@ -55,7 +55,7 @@ export function removeEmptyProperties (jsonTx) {
   }
 
   // string or number
-  if (typeof jsonTx !== `object`) {
+  if (typeof jsonTx !== 'object') {
     return jsonTx
   }
 
