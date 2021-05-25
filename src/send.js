@@ -27,7 +27,7 @@ export default async function send ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo =
 
 export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PRICE, memo = `` }, messages, signer, chainId, accountNumber, sequence) {
   // sign transaction
-  const stdTx = createStdTx({ gas, gasPrices, memo }, messages)
+  let stdTx = createStdTx({ gas, gasPrices, memo }, messages)
   const signMessage = createSignMessage(stdTx, { sequence, accountNumber, chainId })
   let signature, publicKey, signed
   try {
@@ -35,10 +35,15 @@ export async function createSignedTransaction ({ gas, gasPrices = DEFAULT_GAS_PR
   } catch (err) {
     throw new Error('Signing failed: ' + err.message)
   }
-
-  const tx = signed || stdTx
+  if (signed) {
+    stdTx = createStdTx({
+      gas: signed.fee.gas,
+      fees: signed.fee.amount,
+      memo: signed.memo
+    }, signed.msgs)
+  }
   const signatureObject = createSignature(signature, sequence, accountNumber, publicKey)
-  const signedTx = createSignedTransactionObject(tx, signatureObject)
+  const signedTx = createSignedTransactionObject(stdTx, signatureObject)
 
   return signedTx
 }
@@ -77,8 +82,8 @@ export async function queryTxInclusion (txHash, cosmosRESTURL, iterations = 60, 
 }
 
 // attaches the request meta data to the message
-export function createStdTx ({ gas, gasPrices, memo }, messages) {
-  const fees = gasPrices.map(({ amount, denom }) => ({ amount: String(Math.round(amount * gas)), denom }))
+export function createStdTx ({ fees: inputFees, gas, gasPrices, memo }, messages) {
+  const fees = inputFees || gasPrices.map(({ amount, denom }) => ({ amount: String(Math.round(amount * gas)), denom }))
     .filter(({ amount }) => amount > 0)
   return {
     msg: Array.isArray(messages) ? messages : [messages],
